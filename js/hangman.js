@@ -32,8 +32,24 @@ function pickWord() {
 }
 
 function updateBoard() {
+  $("#word").empty();
+
   for (var letter of board) {
     document.getElementById("word").innerHTML += letter + " ";
+  }
+}
+
+function updateMan() {
+  $("#hangImg").attr("src", "img/stick_" + (6 - remainingGuesses) + ".png");
+}
+
+function endGame(win) // win is boolean
+{
+  $("#letters").hide();
+  if (win) {
+    $('#won').show();
+  } else {
+    $('#lost').show();
   }
 }
 
@@ -57,8 +73,12 @@ function checkLetter(letter) {
     updateWord(positions, letter);
   } else {
     remainingGuesses -= 1;
+    updateMan();
   }
 
+  if (remainingGuesses <=0) {
+    endGame(false);
+  }
 }
 // update current word then call for board update
 function updateWord(positions, letter) {
