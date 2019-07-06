@@ -87,23 +87,28 @@ function createLetters() {
 }
 //checks to see if selected letter exists in the array
 function checkLetter(letter) {
+  console.log(letter);
   var positions = [];
-
-  //put all positions the letter exists in an array
+  
   for (var i = 0; i < selectedWord.length; i++) {
-    console.log(selectedWord)
     if (letter == selectedWord[i]) {
       positions.push(i);
     }
   }
-  if (positions.length > 0) {
+  
+  if(positions.length > 0) {
     updateWord(positions, letter);
+    
+    if(!board.includes('_')) {
+      endGame(true);
+    }
+    
   } else {
     remainingGuesses -= 1;
     updateMan();
   }
-
-  if (remainingGuesses <=0) {
+  
+  if(remainingGuesses <= 0) {
     endGame(false);
   }
 }
