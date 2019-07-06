@@ -3,7 +3,9 @@ var selectedWord = "";
 var selectedHint = "";
 var board = [];
 var remainingGuesses = 6;
-var words = ["snake", "monkey", "beetle"];
+var words = [{word: "snake", hint: "It's a reptile."},
+             {word: "monkey", hint: "It's a mammal."},
+             {word: "beetle", hint: "It's a insect."}];
 var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G',
   'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U',
@@ -12,11 +14,27 @@ var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G',
 
 // listeners
 window.onload = startGame();
+$(".letter").click(function(){
+  checkLetter($(this).attr("id"));
+  disableButton($(this));
+  console.log($(this).attr("id"));
+});
+
+$(".replayBtn").on("click", function() {
+  location.reload();
+  
+});
+
+$(".helpBtn").click(function() {
+  disableButton($(this));
+  showHint();
+});
 
 // functions
 function startGame() {
   pickWord();
   initBoard();
+  createLetters();
   updateBoard();
 }
 
@@ -28,15 +46,16 @@ function initBoard() {
 
 function pickWord() {
   var randomInt = Math.floor(Math.random() * words.length);
-  selectedWord = words[randomInt].toUpperCase();
+  selectedWord = words[randomInt].word.toUpperCase();
+  selectedHint = words[randomInt].hint;
 }
 
 function updateBoard() {
   $("#word").empty();
-
   for (var letter of board) {
     document.getElementById("word").innerHTML += letter + " ";
   }
+  
 }
 
 function updateMan() {
@@ -51,6 +70,14 @@ function endGame(win) // win is boolean
   } else {
     $('#lost').show();
   }
+}
+
+function showHint(){
+  console.log("ShowHint()");
+  remainingGuesses -= 1;
+  updateMan();
+  $("#word").append("<br />");
+  $("#word").append("<span class='hint'>Hint: " + selectedHint + "</span>");
 }
 
 function createLetters() {
@@ -88,11 +115,16 @@ function updateWord(positions, letter) {
   updateBoard();
 }
 
-$("#letterBtn").click(function() {
-  var boxVal = $("#letterBox").val();
-  console.log("You pressed the button and it had the value: " + boxVal);
-})
+function disableButton(btn) {
+  btn.prop("disabled", true);
+  btn.attr("class", "btn btn-danger");
+}
 
-$(".letter").on("click", function() {
-  checkLetter($(this).attr("id"));
-});
+function enableButton(btn) {
+  btn.prop("enabled", true);
+  btn.attr("class", "btn btn-success");
+}
+console.log("board " + board); 
+console.log($(".helpBtn").attr("class"));
+console.log("selectedWord: " + selectedWord);
+
